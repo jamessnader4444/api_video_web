@@ -31,6 +31,7 @@ export const getUsers = async (req, res) => {
         deletedAt: {
           [Op.eq]: null,
         },
+        roleId: 0,
       },
       include: [
         {
@@ -108,9 +109,10 @@ export const Register = async (req, res) => {
 
 export const Login = async (req, res) => {
   try {
+    const { remember, email, password } = req.body;
     const user = await Users.findAll({
       where: {
-        email: req.body.email,
+        email,
         deletedAt: {
           [Op.eq]: null,
         },
@@ -121,14 +123,23 @@ export const Login = async (req, res) => {
       return res.status(200).json({
         error: [{ type: "email", message: "Check your email address." }],
       });
-    const match = await bcrypt.compare(req.body.password, user[0].password);
+    const match = await bcrypt.compare(password, user[0].password);
     if (!match)
       return res.status(200).json({
         error: [{ type: "password", message: "Check your password." }],
       });
     const result = await getUserInfo(user[0].id);
-
-    res.json(result);
+    let rememberMeToken;
+    if (remember)
+      rememberMeToken = jwt.sign(
+        { email, password },
+        process.env.REMEMBER_TOKEN_SECRET,
+        {
+          expiresIn: "1d",
+        }
+      );
+    console.log(rememberMeToken);
+    res.json({ ...result, rememberMeToken });
   } catch (error) {
     console.log(error);
   }
@@ -240,7 +251,8 @@ export const getUserInfo = async (userId) => {
   );
   return {
     user: {
-      role: roleId === 1 ? ["user", "admin"] : "admin",
+      role: roleId === 1 ? "admin" : "user",
+      loginRedirectUrl: roleId === 1 ? "/admin/users" : "/user/profile",
       data: {
         id,
         name,
