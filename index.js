@@ -34,7 +34,6 @@ app.use(router);
 app.get("/", express.static(path.join(__dirname, "./public")));
 app.get("/uploads/:file", (req, res) => {
   const { file } = req.params;
-  console.log(file);
   res.sendFile(path.join(__dirname, `./uploads/${file}`));
 });
 app.post("/api/uploads/file", upload.single("file"), uploadFile);
