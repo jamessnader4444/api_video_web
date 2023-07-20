@@ -65,9 +65,10 @@ export const changeLogoText = async (req, res) => {
 };
 export const changeContact = async (req, res) => {
   try {
-    const { contact } = req.body;
+    const { email, phoneNumber, fax } = req.body;
+    console.log(email, phoneNumber, fax);
     await SiteInfo.update(
-      { contact },
+      { email, phoneNumber, fax },
       {
         where: { id: 1 },
       }

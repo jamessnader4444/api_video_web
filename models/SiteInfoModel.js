@@ -14,7 +14,14 @@ const SiteInfo = db.define(
       field: "middle_logo",
       type: DataTypes.STRING,
     },
-    contact: {
+    email: {
+      type: DataTypes.STRING,
+    },
+    phoneNumber: {
+      field: "phone_number",
+      type: DataTypes.STRING,
+    },
+    fax: {
       type: DataTypes.STRING,
     },
     company: {
