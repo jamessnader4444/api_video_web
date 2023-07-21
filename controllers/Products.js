@@ -30,12 +30,15 @@ export const addProduct = async (req, res) => {
 };
 
 export const getProductsByCategory = async (req, res) => {
-  const { categoryId, start, limit } = req.body;
+  const { categoryId, start, limit, searchText } = req.body;
   const { rows, count } = await Products.findAndCountAll({
     where: {
       categoryId,
       deletedAt: {
         [Op.eq]: null,
+      },
+      name: {
+        [Op.like]: `%${searchText}%`,
       },
     },
     include: [
@@ -70,12 +73,15 @@ export const getProductsByCategory = async (req, res) => {
 };
 
 export const getProductsByUser = async (req, res) => {
-  const { userId, start, limit } = req.body;
+  const { userId, start, limit, searchText } = req.body;
   const { rows, count } = await Products.findAndCountAll({
     where: {
       userId,
       deletedAt: {
         [Op.eq]: null,
+      },
+      name: {
+        [Op.like]: `%${searchText}%`,
       },
     },
     attributes: ["id", "name", "userId", "imageURL", "videoURL", "description"],

@@ -9,9 +9,11 @@ export const getSiteInfo = async (req, res) => {
       middleLogo: "back.jpg",
       contact: "",
       company: "",
-      banner_logo: "banner.jpg",
+      bannerLogo: "banner.jpg",
       logoText: "100 videos for 5$",
-      banner_enable: 1,
+      bannerEnable: 1,
+      phoneNumber: "123 456 789",
+      fax: "123 456 789"
     };
     const siteInfo = await SiteInfo.findAll();
     if (siteInfo[0]) res.json(siteInfo[0]);
